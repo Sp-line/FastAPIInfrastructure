@@ -12,20 +12,25 @@ from pydantic_settings import (
 )
 
 
-class ShowtimesJStreamConfig(BaseModel):
+class JStreamBaseConfig(BaseModel):
+    retention: RetentionPolicy = RetentionPolicy.LIMITS
+    max_age: int = 24 * 60 * 60
+    discard: DiscardPolicy = DiscardPolicy.OLD
+
+
+class ShowtimesConfig(JStreamBaseConfig):
     name: str = "showtimes_stream"
     subjects: list[str] = ["showtimes.>", ]
-    retention: RetentionPolicy = RetentionPolicy.LIMITS
-    max_age: int = 24 * 60 * 60
-    discard: DiscardPolicy = DiscardPolicy.OLD
 
 
-class CatalogJStreamConfig(BaseModel):
+class CatalogConfig(JStreamBaseConfig):
     name: str = "catalog_stream"
     subjects: list[str] = ["catalog.>", ]
-    retention: RetentionPolicy = RetentionPolicy.LIMITS
-    max_age: int = 24 * 60 * 60
-    discard: DiscardPolicy = DiscardPolicy.OLD
+
+
+class PurchasesConfig(JStreamBaseConfig):
+    name: str = "purchases_stream"
+    subjects: list[str] = ["purchases.>", ]
 
 
 class NatsConfig(BaseModel):
@@ -40,8 +45,9 @@ class Settings(BaseSettings):
         env_prefix="APP_CONFIG__",
         extra="ignore"
     )
-    catalog: CatalogJStreamConfig = CatalogJStreamConfig()
-    showtimes: ShowtimesJStreamConfig = ShowtimesJStreamConfig()
+    catalog: CatalogConfig = CatalogConfig()
+    showtimes: ShowtimesConfig = ShowtimesConfig()
+    purchases: PurchasesConfig = PurchasesConfig()
     nats: NatsConfig
 
 
