@@ -2,7 +2,7 @@ services:
 
   nats:
     image: nats:2.10-alpine
-    container_name: nats_infrastructure
+    container_name: nats-infrastructure
     ports:
       - "4222:4222"
       - "8222:8222"
