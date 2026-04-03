@@ -22,6 +22,7 @@ async def setup_infrastructure() -> None:
         stream_configs = [
             settings.catalog.model_dump(),
             settings.showtimes.model_dump(),
+            settings.purchases.model_dump(),
         ]
 
         streams = [js.add_stream(**config) for config in stream_configs]
